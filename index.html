@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Calculator</title>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+			letter-spacing: 2px;
+			font-family: "Helvetica Neue", Helvetica, sans-serif;
+		}
+
+		html, body {
+		    height: 100%;
+		}
+
+		#wrapper {
+			min-height: 100%;
+		    height: auto !important;
+		    height: 100%;
+		}
+
+		#calculator {
+			width:230px;
+			height:321px;
+			border-radius: 4px;
+			background: rgba(0,0,0,0.4);
+			border: 1px solid #616161;
+			overflow:hidden;
+			position:relative;
+		}
+
+		.close, .minimize, .maximize {
+			position:absolute;
+			width:12px;
+			height:12px;
+			border-radius: 6px;
+			margin:0px;
+		}
+
+		.close {
+			background: #ff4a44;
+			top: 5px;
+			left: 8px;
+		}
+
+		.minimize {
+			background: #ffb429;
+			top: 5px;
+			left: 28px;
+		}
+
+		.maximize {
+			background: #24c238;
+			top: 5px;
+			left: 48px;
+		}
+
+		.result {
+			height:80px;
+			width:100%;
+			text-align: right;
+			color: #fff;
+			font-size: 48px;
+			font-weight: 100;
+			padding-top:22px;
+			padding-right: 12px;
+		}
+		span {
+			width: 56px;
+			height:47px;
+			display:block;
+			float:left;
+			margin-right:1px;
+			margin-bottom: 1px;
+			background: #d0d0d0;
+			text-align: center;
+			vertical-align: middle;
+			padding: 10px 0;
+			font-size: 22px;
+			font-weight:200;
+		}
+		span:active, span:focus {
+			background: rgba(0,0,0,0.1);
+		}
+		span.long {
+			width:113px;
+			text-align: left;
+			padding-left: 20px;
+		}
+		span.orange {
+			background: #f6872c;
+			color: #fff;
+		}
+		span.orange:active, span.orange:focus {
+			background: rgba(0,0,0,0.1);
+		}
+	</style>
+</head>
+<body>
+
+<div id="wrapper">
+
+	<div id="calculator" class="draggable">
+		<div class="close"></div>
+		<div class="minimize"></div>
+		<div class="maximize"></div>
+		<div class="result"><p></p></div>
+
+		<span class="clear">C</span>
+		<span>+/-</span>
+		<span>%</span>
+		<span class="orange">÷</span>
+
+		<span>7</span>
+		<span>8</span>
+		<span>9</span>
+		<span class="orange">x</span>
+
+		<span>4</span>
+		<span>5</span>
+		<span>6</span>
+		<span class="orange">-</span>
+
+		<span>1</span>
+		<span>2</span>
+		<span>3</span>
+		<span class="orange">+</span>
+
+		<span class="long">0</span>
+		<span>.</span>
+		<span class="orange">=</span>
+	</div>
+</div>
+	
+	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+	<script type="text/javascript">
+		$(function() {
+		    $( ".draggable" ).draggable({ containment: "#wrapper", scroll: false });
+		});
+		window.onload = function () {
+		  var buttons = document.getElementsByTagName('span'),
+		      result = document.querySelectorAll('.result p')[0],
+		      clear = document.getElementsByClassName('clear')[0];
+		  
+		  for (var i = 0; i < buttons.length; i += 1) {
+		    if (buttons[i].innerHTML === '=') {
+		      buttons[i].addEventListener("click", calculate(i));
+		    } else {
+		      buttons[i].addEventListener("click", addValue(i));
+		    }
+		  }
+		  
+		  clear.onclick = function () {
+		    result.innerHTML = '';
+		  };  
+		  
+		  function addValue(i) {
+		    return function () {
+		      if (buttons[i].innerHTML === '÷') {
+		         result.innerHTML  += '/';
+		      } else if (buttons[i].innerHTML === 'x') {
+		         result.innerHTML  += '*';
+		      } else {
+		                    result.innerHTML += buttons[i].innerHTML;
+		            }
+		    };
+		  }
+		  
+		  function calculate(i) {
+		    return function () {
+		            var final_res = result.innerHTML;
+
+		            var bugFix = final_res.replace(/\d+/g, function(numb){ 
+		                return parseInt(numb, 10);
+		            });
+		            
+		              
+		      result.innerHTML = eval(bugFix);
+		    };
+		  }
+		};
+	</script>
+</body>
+</html>
